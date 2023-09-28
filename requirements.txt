@@ -1,0 +1,9 @@
+ID verification - user/service provider
+Show current threshold for service provider
+
+Current feature (Pasabuy): 
+Lineup booking (can either accept or pass)
+
+
+For future feature:
+Collaborate with stores to show their products. (Pasadya)
