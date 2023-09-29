@@ -9,13 +9,15 @@ export const ActionButton = ({
   buttonPropsStyles,
   textPropsStyles,
   onPressAction,
-  buttonText
+  buttonText,
+  disabled = false
 }) => {
 
   return (
     <TouchableOpacity 
       style={[...buttonPropsStyles,styles.buttonSpacing]}
       onPress={()=>onPressAction()}
+      disabled={disabled}
       >
       <Text
         style={[...textPropsStyles]}

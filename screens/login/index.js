@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { verifyLogin } from '../../services/userService'
 import {
@@ -18,6 +18,7 @@ import { ActionButton } from '../../components/buttons/actionButton'
 export const Login = ({navigation}) => {
   const [username,setUsername] = useState('')
   const [password,setPassword] = useState('')
+  const [isError,setIsError] = useState(true)
 
   const selector = useSelector(state => state.user)
   const dispatch = useDispatch()
@@ -28,18 +29,26 @@ export const Login = ({navigation}) => {
       password
     }
 
-    let [user, error] = verifyLogin(body,selector.users[0])
+    if(!setIsError){
+      let [user, error] = verifyLogin(body,selector.users[0])
+      if(error){
+        console.log(error)
+      }
 
-    if(error){
-      console.log(error)
+      dispatch(user.data)
     }
 
-    dispatch(user.data)
   }
 
   const onSignUpHandler = () => {
     navigation.navigate('SignUp')
   }
+
+  useEffect(()=>{
+
+    setIsError(username&&password?false:true)
+
+  },[username,password])
 
   return (
     <View style={[styles.container]}>
@@ -51,6 +60,7 @@ export const Login = ({navigation}) => {
         value={username}
         isSecureText={false}
         onInputChange={setUsername}
+        errorText={'Username is required'}
         propStyles={[styles.inputSpacing,styles.inputField]}
       />
 
@@ -59,14 +69,16 @@ export const Login = ({navigation}) => {
         value={password}
         isSecureText={true}
         onInputChange={setPassword}
+        errorText={'Password is required'}
         propStyles={[styles.inputSpacing,styles.inputField]}
       />
 
       <Text style={[styles.forgotPasswordText]}>Forgot password?</Text>
       
       <ActionButton
-        buttonPropsStyles={[styles.buttonPropsStyles, styles.buttonSignIn]}
+        buttonPropsStyles={[styles.buttonPropsStyles, isError? styles.buttonSignInDisabled :styles.buttonSignIn]}
         textPropsStyles={[styles.textSignIn]}
+        disabled={isError}
         onPressAction={onSignInHandler}
         buttonText={'Sign In'}
       />
@@ -119,6 +131,9 @@ const styles = StyleSheet.create({
   },
   buttonSignIn: {
     backgroundColor: colors['tersiary-color'],
+  },
+  buttonSignInDisabled: {
+    backgroundColor: '#CECECE'
   },
   buttonSignUp: {
     backgroundColor: colors['alternative-color'],
